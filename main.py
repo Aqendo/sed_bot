@@ -4,6 +4,7 @@ import asyncio
 from functools import wraps, partial
 from aiogram import Bot, Dispatcher, executor, types
 import re
+import os
 from dotenv import load_dotenv, find_dotenv
 REGEX = re.compile(r".*/.*/.*")
 API_TOKEN = os.environ["BOT_TOKEN"]
