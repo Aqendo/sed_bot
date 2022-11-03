@@ -4,9 +4,9 @@ import asyncio
 from functools import wraps, partial
 from aiogram import Bot, Dispatcher, executor, types
 import re
+from dotenv import load_dotenv, find_dotenv
 REGEX = re.compile(r".*/.*/.*")
-API_TOKEN = 'foo:bar'
-
+API_TOKEN = os.environ["BOT_TOKEN"]
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
@@ -47,7 +47,7 @@ async def echo(message: types.Message):
     result = await make(message.reply_to_message.text, message.text)
     if result == "":
         return
-    await message.reply(result, parse_mode="HTML")
+    await bot.send_message(message.chat.id, result, reply_to_message_id=message.reply_to_message.message_id, parse_mode="HTML")
 
 
 if __name__ == '__main__':
