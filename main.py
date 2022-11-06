@@ -1,4 +1,6 @@
 import subprocess
+from collections import defaultdict
+import time
 import logging
 import asyncio
 from functools import wraps, partial
@@ -15,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 # Initialize bot and dispatcher
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
-
+last = defaultdict(int)
 
 def async_wrap(func):
     @wraps(func)
@@ -46,9 +48,12 @@ async def send_welcome(message: types.Message):
 async def echo(message: types.Message):
     if not re.match(REGEX, message.text):
         return
+    if time.time() - last[message.chat.id] < 10:
+        return
     result = await make(message.reply_to_message.text, message.text)
     if result == "":
         return
+    last[message.chat.id] = time.time()
     await bot.send_message(message.chat.id, result, reply_to_message_id=message.reply_to_message.message_id, parse_mode="HTML")
 
 
